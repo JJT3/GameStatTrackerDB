@@ -1,14 +1,23 @@
+<?php 
+$_SESSION["authenticated"] = false;
+$_SESSION["username"] = NULL;
+$_SESSION["password"] = NULL;
+session_start();
+
+//session_unset();
+//session_destroy();
+?>
 <html>
     <head>
         <title>GST</title>
-        <?php include("bootstrap.html"); ?>
+        <?php include("html/bootstrap.html"); ?>
     </head>
 
     <!-- Navbar -->
-    <?php include("nav.html"); ?>
+    <?php include("nav.php"); ?>
     
     <body>
-        <!--<//?php include("connect.php");?>-->
-        <?php include("scripts.html"); ?>
+        <?php include("connect_db.php");?>
+        <?php include("html/scripts.html"); ?>
     </body>
 </html>
