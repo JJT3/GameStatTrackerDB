@@ -21,17 +21,18 @@ $_SESSION["password"] = $_SESSION["password"];
             {
                 if(isset($_SESSION['authenticated']))
                 {
+                    //If the user is not logged in.
                     if($_SESSION['authenticated'] === false)
                     {
             ?>
             <!--Register and Login buttons for users who aren't logged in. -->
-            <li class="nav-item"><a class="nav-link" href="login.php">Register</a></li>
-            <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+            <li class="nav-item"><a class="nav nav-link" href="register.php">Register</a></li>
+            <li class="nav-item"><a class="nav nav-link" href="login.php">Login</a></li>
             <?php
                 //This is pretty cool being able to alternate between PHP and HTML like this
                 //It's still a pretty annoying language though
                     }
-
+                    //If the user is logged in.
                     else
                     {
             ?>

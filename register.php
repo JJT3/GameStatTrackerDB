@@ -2,29 +2,51 @@
 //Initialize.
 session_start();
 include("connect_db.php");
-
+include("config.php");
 if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
-	$_SESSION["username"] = $_POST["username"];
-	$_SESSION["password"] = $_POST["password"];
-
-	$pass=crypt($_SESSION["password"],'$1$somethin$');
     if($users = $con -> query("SELECT * FROM `users`"))
     {
+        $username_taken = false;
         while($user = mysqli_fetch_assoc($users))
         {
-            if($user['username'] === $_SESSION['username'] && $user['password'] === $_SESSION['password'])
+            //If this username is available...
+            if($user['username'] === $_POST['username'])
             {
-                //echo("Logged in successfully.");
-                $_SESSION["authenticated"] = true;
-            }
-            else
-            {
-                //echo("Incorrect credentials.");
+                $username_taken = true;
+                //echo("Username is taken.");
                 $_SESSION["authenticated"] = false;
+                $_SESSION["username"] = NULL;
+                $_SESSION["password"] = NULL;
+                break;
+            }
+        }
+
+        //After the loop, check if we're able to create the account.
+        if($username_taken === false)
+        {
+            // Create new user account.
+            $pass = crypt($_POST["password"],'$1$somethin$');
+            $new_user = create_new_user($con, $_POST["username"], $pass);
+
+            //Check if the account was created successfully.
+            if ($new_user != NULL) 
+            {
+                //Log into account.
+                $_SESSION["authenticated"] = true;
+                $_SESSION["username"] = $_POST["username"];
+                $_SESSION["password"] = $_POST["password"];
+                echo("SUCCESS");
+            } 
+            else 
+            {
+                echo "Error inserting data" . $con->error;
             }
         }
     }
+    //PICK BACK UP HERE
+    //ADD CONDITION FOR REDIRECTING USER BASED UPON RESULTS OF ACCOUNT CREATION
+    //ALSO ADD MORE CHECKS FOR USERNAME AND PASSWORD LENGTH
     header("Location: index.php");
 }
 else
@@ -51,7 +73,7 @@ else
                             <h5 class="card-title">Create an account</h5>
                         </div>
                         <div class="card-body">
-                            <form class="form-group" method="POST" action="/GameStatTrackerDB/login.php">
+                            <form class="form-group" method="POST" action="/GameStatTrackerDB/register.php">
                                 <ul class="">
                                         <label for="username"><strong>Username</strong></label><br>
                                         <input class="form-control" type="text" id="username" name="username"><br>
@@ -59,7 +81,7 @@ else
                                         <input class="form-control" type="password" id="password" name="password"><br>
                                 </ul>
                                 <div class="d-flex justify-content-center">
-                                    <input type="submit" class="btn btn-lg btn-primary" value = "Log in">
+                                    <input type="submit" class="btn btn-lg btn-primary" value = "Create account">
                                 </div>
                             </form>
                         </div>

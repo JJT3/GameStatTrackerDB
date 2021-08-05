@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         while($user = mysqli_fetch_assoc($users))
         {
-            if($user['username'] === $_SESSION['username'] && $user['password'] === $_SESSION['password'])
+            if($user['username'] != $_SESSION['username'] && $user['password'] === $_SESSION['password'])
             {
                 //echo("Logged in successfully.");
                 $_SESSION["authenticated"] = true;
